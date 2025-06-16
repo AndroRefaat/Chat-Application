@@ -1,17 +1,26 @@
 import express from 'express';
-import path from 'path';
 import { Server } from 'socket.io';
+import bootstrap from './src/app.controller.js';
+import connectDB from './src/DB/connection.js';
+import dotenv from 'dotenv';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Load environment variables
+dotenv.config();
+
+// Connect to MongoDB
+connectDB();
+
 const app = express();
-const port = process.env.PORT || 3000;
 
-
+// Configure static file serving
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+await bootstrap(app, express)
+const port = process.env.PORT || 3000;
 
 const server = app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
@@ -38,7 +47,6 @@ function onConnected(socket) {
         io.emit('clients-total', socketsConnected.size);
     });
 
-
     socket.on('message', (data) => {
         // console.log(data);
         socket.broadcast.emit('chat-message', data)
@@ -47,6 +55,4 @@ function onConnected(socket) {
     socket.on('feedback', (data) => {
         socket.broadcast.emit('feedback', data);
     })
-
-
 }

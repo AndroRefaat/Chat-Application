@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('http://localhost:3000');
 
 const clientsTotal = document.getElementById('clients-total');
 const messageContainer = document.getElementById('message-container');

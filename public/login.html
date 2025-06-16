@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Sign Up - iChat</title>
+    <title>Login - iChat</title>
 </head>
 <body>
     <div class="signup-container">
-        <h1 class="title">iChat Sign Up 😉</h1>
-        <form id="signup-form" class="signup-form">
-            <div class="form-group">
-                <span><i class="fas fa-user"></i></span>
-                <input type="text" id="username" name="username" placeholder="Username" required>
-            </div>
+        <h1 class="title">iChat Login 😉</h1>
+        <form id="login-form" class="signup-form">
             <div class="form-group">
                 <span><i class="fas fa-envelope"></i></span>
                 <input type="email" id="email" name="email" placeholder="Email" required>
@@ -23,16 +19,13 @@
                 <span><i class="fas fa-lock"></i></span>
                 <input type="password" id="password" name="password" placeholder="Password" required>
             </div>
-            <div class="form-group">
-                <span><i class="fas fa-lock"></i></span>
-                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
-            </div>
             <button type="submit" class="signup-button">
-                Sign Up <span><i class="fas fa-user-plus"></i></span>
+                Login <span><i class="fas fa-sign-in-alt"></i></span>
             </button>
         </form>
-        <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
+        <p class="forgot-password-link"><a href="forgot-password.html">Forgot password?</a></p>
+        <p class="login-link">Don't have an account? <a href="index.html">Sign up here</a></p>
     </div>
-    <script src="signup.js"></script>
+    <script src="login.js"></script>
 </body>
 </html> 
