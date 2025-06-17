@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 // Login successful
                 localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('username', data.user.username);
                 window.location.href = '/chat.html';
             } else {
                 // Show error message from server

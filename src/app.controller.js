@@ -5,11 +5,12 @@ import path from "path"
 import authRouter from "./routes/auth/auth.controller.js"
 import globalErrorHandler from "./utils/errorHandeling/globalErrorHandler.js"
 import notFoundHandler from "./utils/errorHandeling/notFoundHandler.js"
+import dotenv from "dotenv"
 
 const bootstrap = async (app, express) => {
     await connectDB()
     app.use(express.json());
-
+    dotenv.config();
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     app.use(express.static(path.join(__dirname, '../../public')));

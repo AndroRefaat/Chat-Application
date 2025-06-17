@@ -6,6 +6,10 @@ const nameInput = document.getElementById('name-input');
 const messageForm = document.getElementById('message-form');
 const messageInput = document.getElementById('message-input');
 
+// Set username from localStorage and make input read-only
+const username = localStorage.getItem('username') || 'anonymous';
+nameInput.value = username;
+nameInput.readOnly = true;
 
 messageContainer.innerHTML = '';
 
@@ -21,7 +25,7 @@ socket.on('clients-total', (total) => {
 function sendMessage() {
     if (messageInput.value === '' || nameInput.value === '') return;
     const data = {
-        name: nameInput.value,
+        name: username, // Always use the username from localStorage
         message: messageInput.value,
         dateTime: new Date()
     };
@@ -80,5 +84,14 @@ socket.on('feedback', (data) => {
 function clearFeedback() {
     document.querySelectorAll('li.message-feedback').forEach(element => {
         element.parentNode.removeChild(element);
+    });
+}
+
+// Logout button logic
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        localStorage.clear();
+        window.location.href = '/login.html';
     });
 }

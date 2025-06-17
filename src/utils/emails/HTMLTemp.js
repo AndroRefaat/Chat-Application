@@ -7,67 +7,89 @@ export const signup = (otp) => `<!DOCTYPE html>
         <title>Activate Your Account</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-                background-color: #f4f4f4;
+                font-family: 'Open Sans', Arial, sans-serif;
+                background: #ebebeb;
                 margin: 0;
                 padding: 0;
             }
             .container {
-                background-color: white;
-                width: 50%;
-                max-width: 400px;
-                margin: 50px auto;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background: #fff;
+                width: 100%;
+                max-width: 420px;
+                margin: 40px auto;
+                border-radius: 18px;
+                box-shadow: 0 4px 24px rgba(45,45,45,0.08);
+                overflow: hidden;
+                border: 1px solid #f0f0f0;
             }
             .header {
-                background-color: #ff4d4d;
-                color: white;
-                padding: 15px;
-                font-size: 20px;
-                font-weight: bold;
-                border-radius: 10px 10px 0 0;
+                background: #ff4d4f;
+                color: #fff;
+                padding: 24px 0 12px 0;
+                font-size: 28px;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-align: center;
+            }
+            .icon {
+                font-size: 48px;
+                margin-bottom: 8px;
             }
             .content {
-                padding: 20px;
+                padding: 28px 24px 18px 24px;
+                text-align: center;
             }
             .content h2 {
-                font-size: 24px;
-                color: #333;
+                font-size: 22px;
+                color: #222;
+                margin-bottom: 8px;
+            }
+            .content p {
+                color: #555;
+                font-size: 16px;
+                margin: 10px 0 18px 0;
             }
             .otp-box {
                 display: inline-block;
-                background-color: #f8f8f8;
-                padding: 10px 20px;
-                font-size: 22px;
-                font-weight: bold;
-                color: #ff4d4d;
-                border-radius: 5px;
-                margin-top: 15px;
-                letter-spacing: 3px;
+                background: #fff0f0;
+                color: #ff4d4f;
+                font-size: 28px;
+                font-weight: 700;
+                padding: 12px 32px;
+                border-radius: 10px;
+                letter-spacing: 6px;
+                margin: 12px 0 18px 0;
+                border: 2px dashed #ff4d4f;
             }
             .footer {
-                font-size: 14px;
-                color: gray;
-                margin-top: 20px;
+                background: #f6f6f6;
+                color: #888;
+                font-size: 13px;
+                padding: 18px 20px;
+                border-radius: 0 0 18px 18px;
+                text-align: center;
+            }
+            @media (max-width: 500px) {
+                .container { max-width: 98vw; }
+                .content { padding: 18px 6vw 12px 6vw; }
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                Chat App
+                <span class="icon">💬</span><br/>
+                iChat
             </div>
             <div class="content">
-                <h2>Welcome!</h2>
-                <p>Use the following OTP to verify your email:</p>
+                <h2>Welcome to iChat!</h2>
+                <p>Use the following OTP to verify your email address:</p>
                 <div class="otp-box">${otp}</div>
-                <p>This OTP will expire in 10 minutes. Do not share it with anyone.</p>
+                <p style="margin-top:18px;">This OTP will expire in 10 minutes.<br/>Do not share it with anyone.</p>
             </div>
             <div class="footer">
-                If you have any questions, just reply to this email—we’re always happy to help.
+                Need help? Just reply to this email — we're always happy to assist.<br/>
+                &copy; ${new Date().getFullYear()} iChat
             </div>
         </div>
     </body>

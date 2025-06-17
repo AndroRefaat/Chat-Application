@@ -14,7 +14,7 @@
             <div class="name">
                 <span><i class="fas fa-user"></i></span>
                 <input type="text" id="name-input" class="name-input"
-                    value="anonymous" maxlength="20" />
+                    value="anonymous" maxlength="20" readonly />
             </div>
             <ul class="message-container" id="message-container">
                 <!-- Messages will be dynamically added here -->
@@ -29,8 +29,11 @@
             </form>
         </div>
         <h3 class="clients-total" id="clients-total">Total Clients: 0</h3>
+        <button id="logout-btn" class="logout-btn"
+            style="position:absolute;top:20px;right:20px;">Logout</button>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
         <script src="main.js"></script>
     </body>
-</html> 
+</html>
