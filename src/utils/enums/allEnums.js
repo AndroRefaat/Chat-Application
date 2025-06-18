@@ -5,7 +5,8 @@ export const OTPS = {
 
 
 export const subjects = {
-    register: "Acctivate Acoount",
+    register: "Activate Account",
+    resetPassword: "Reset Password",
     accepted: "Accepted",
     rejected: "Rejected",
 }
