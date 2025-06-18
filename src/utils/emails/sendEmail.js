@@ -12,7 +12,7 @@ const sendEmails = async ({ to, subject, html }) => {
             }
         })
         const info = await transporter.sendMail({
-            from: `"Job Search App" <${process.env.EMAIL}>`,
+            from: `"Chat App 💬" <${process.env.EMAIL}>`,
             to,
             subject,
             html,
