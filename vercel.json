@@ -1,17 +1,5 @@
 {
   "version": 2,
-<<<<<<< HEAD
-=======
-  "name": "chat-application",
-  "functions": {
-    "index.js": {
-      "maxDuration": 30
-    }
-  },
-  "env": {
-    "NODE_ENV": "production"
-  },
->>>>>>> 3b6a392740477f87b5cabbcd9f2cb0f6e26f509d
   "builds": [
     {
       "src": "index.js",
@@ -21,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "/index.js"
     }
   ]
 }
