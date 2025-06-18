@@ -7,14 +7,7 @@ import { fileURLToPath } from 'url';
 import { runSocket } from './src/socket/socket.js';
 
 
-
-
-// Load environment variables
 dotenv.config();
-
-// Connect to MongoDB
-connectDB();
-
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);

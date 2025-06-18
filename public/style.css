@@ -232,3 +232,27 @@ body {
   background: #d9363e;
   transform: translateY(-2px) scale(1.04);
 }
+
+/* Message states */
+.message-loading,
+.message-info,
+.message-error {
+  list-style-type: none;
+  padding: 8px 12px;
+  margin: 12px;
+  text-align: center;
+  font-style: italic;
+  color: #7e7e7e;
+}
+
+.message-loading p {
+  color: #007bff;
+}
+
+.message-info p {
+  color: #28a745;
+}
+
+.message-error p {
+  color: #dc3545;
+}

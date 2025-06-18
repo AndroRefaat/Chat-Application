@@ -1,4 +1,91 @@
-const socket = io('http://localhost:3000');
+// Ensure only one socket connection
+let socket;
+
+// Function to initialize socket connection
+function initializeSocket() {
+    // Close existing connection if any
+    if (socket) {
+        socket.disconnect();
+    }
+
+    // Create new connection
+    socket = io('http://localhost:3000', {
+        transports: ['websocket', 'polling'],
+        upgrade: true,
+        rememberUpgrade: false
+    });
+
+    // Set up socket event listeners
+    setupSocketListeners();
+}
+
+// Function to set up all socket event listeners
+function setupSocketListeners() {
+    socket.on('connect', () => {
+        console.log('Connected to server with socket ID:', socket.id);
+        // Load previous messages when connected
+        socket.emit('load-messages', 'general');
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+    });
+
+    socket.on('clients-total', (total) => {
+        clientsTotal.textContent = `Total Clients: ${total}`;
+    });
+
+    // Listen for previous messages
+    socket.on('previous-messages', (messages) => {
+        // Clear loading message
+        messageContainer.innerHTML = '';
+
+        if (messages.length === 0) {
+            messageContainer.innerHTML = '<li class="message-info"><p>No previous messages. Start the conversation!</p></li>';
+            return;
+        }
+
+        messages.forEach(message => {
+            const isOwnMessage = message.sender === username;
+            addMessageToUI(isOwnMessage, {
+                name: message.sender,
+                message: message.content,
+                dateTime: message.createdAt
+            });
+        });
+    });
+
+    // Listen for message sent confirmation
+    socket.on('message-sent', (data) => {
+        // Message was successfully saved and sent
+        console.log('Message sent successfully:', data);
+    });
+
+    // Listen for errors
+    socket.on('error', (errorMessage) => {
+        console.error('Socket error:', errorMessage);
+        // Clear loading message and show error
+        messageContainer.innerHTML = '<li class="message-error"><p>Error loading messages. Please refresh the page.</p></li>';
+    });
+
+    socket.on('chat-message', (data) => {
+        addMessageToUI(false, data);
+    });
+
+    socket.on('feedback', (data) => {
+        clearFeedback();
+        if (data.feedback) {
+            const element = `
+                <li class="message-feedback">
+                    <p class="feedback" id="feedback">
+                        ${data.feedback}
+                    </p>
+                </li>`;
+            messageContainer.innerHTML += element;
+            scrollToBottom();
+        }
+    });
+}
 
 const clientsTotal = document.getElementById('clients-total');
 const messageContainer = document.getElementById('message-container');
@@ -13,30 +100,70 @@ nameInput.readOnly = true;
 
 messageContainer.innerHTML = '';
 
+// Show loading message
+messageContainer.innerHTML = '<li class="message-loading"><p>Loading previous messages...</p></li>';
+
+// Initialize socket connection
+initializeSocket();
+
+// Handle page visibility change (when user switches tabs or minimizes)
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Page is hidden, disconnect socket
+        if (socket) {
+            socket.disconnect();
+        }
+    } else {
+        // Page is visible again, reconnect socket
+        initializeSocket();
+    }
+});
+
+// Handle page unload (refresh, close, navigate away)
+window.addEventListener('beforeunload', () => {
+    if (socket) {
+        socket.disconnect();
+    }
+});
+
 messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
     sendMessage();
 });
 
-socket.on('clients-total', (total) => {
-    clientsTotal.textContent = `Total Clients: ${total}`;
-});
-
 function sendMessage() {
     if (messageInput.value === '' || nameInput.value === '') return;
+
+    const messageText = messageInput.value.trim();
+    if (messageText === '') return;
+
     const data = {
         name: username, // Always use the username from localStorage
-        message: messageInput.value,
-        dateTime: new Date()
+        message: messageText,
+        dateTime: new Date(),
+        room: 'general'
     };
-    socket.emit('message', data);
-    addMessageToUI(true, data);
-    messageInput.value = '';
-}
 
-socket.on('chat-message', (data) => {
-    addMessageToUI(false, data);
-});
+    // Clear input immediately for better UX
+    messageInput.value = '';
+
+    // Add message to UI optimistically
+    addMessageToUI(true, data);
+
+    // Send to server
+    if (socket && socket.connected) {
+        socket.emit('message', data);
+    } else {
+        console.error('Socket not connected, attempting to reconnect...');
+        initializeSocket();
+        // Retry sending message after a short delay
+        setTimeout(() => {
+            if (socket && socket.connected) {
+                socket.emit('message', data);
+            }
+        }, 1000);
+    }
+}
 
 function addMessageToUI(isOwnMessage, data) {
     clearFeedback();
@@ -56,28 +183,20 @@ function scrollToBottom() {
 }
 
 messageInput.addEventListener('focus', () => {
-    socket.emit('feedback', { feedback: nameInput.value ? `${nameInput.value} is typing...` : '' });
+    if (socket && socket.connected) {
+        socket.emit('feedback', { feedback: nameInput.value ? `${nameInput.value} is typing...` : '' });
+    }
 });
 
 messageInput.addEventListener('keypress', () => {
-    socket.emit('feedback', { feedback: nameInput.value ? `${nameInput.value} is typing...` : '' });
+    if (socket && socket.connected) {
+        socket.emit('feedback', { feedback: nameInput.value ? `${nameInput.value} is typing...` : '' });
+    }
 });
 
 messageInput.addEventListener('blur', () => {
-    socket.emit('feedback', { feedback: '' });
-});
-
-socket.on('feedback', (data) => {
-    clearFeedback();
-    if (data.feedback) {
-        const element = `
-            <li class="message-feedback">
-                <p class="feedback" id="feedback">
-                    ${data.feedback}
-                </p>
-            </li>`;
-        messageContainer.innerHTML += element;
-        scrollToBottom();
+    if (socket && socket.connected) {
+        socket.emit('feedback', { feedback: '' });
     }
 });
 
@@ -91,6 +210,9 @@ function clearFeedback() {
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
+        if (socket) {
+            socket.disconnect();
+        }
         localStorage.clear();
         window.location.href = '/login.html';
     });
