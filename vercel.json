@@ -1,6 +1,9 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "name": "chat-application",
+=======
+>>>>>>> 80b636891d3ef6477c56511b59d42f6fff8c642b
   "functions": {
     "index.js": {
       "maxDuration": 30
